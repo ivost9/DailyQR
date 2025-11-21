@@ -1,37 +1,207 @@
-.App {
-  text-align: center;
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,500&family=Montserrat:wght@300;500;700&display=swap");
+
+/* 2. Основни настройки */
+:root {
+  --bg-color: #0f0c29;
+  --card-bg: rgba(255, 255, 255, 0.05);
+  --accent: #ffd700; /* Златисто */
+  --text-main: #ffffff;
+  --text-secondary: #a8b2d1;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Montserrat", sans-serif;
+  background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+  color: var(--text-main);
+  height: 100vh;
+  overflow: hidden; /* Спира скролването */
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+.app-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+  position: relative;
+}
+
+/* 3. Анимирани топки във фона (Orbs) */
+.background-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  z-index: 0;
+  opacity: 0.6;
+  animation: float 10s infinite ease-in-out;
+}
+
+.orb-1 {
+  width: 300px;
+  height: 300px;
+  background: #ff00cc;
+  top: -50px;
+  left: -50px;
+}
+
+.orb-2 {
+  width: 400px;
+  height: 400px;
+  background: #3333ff;
+  bottom: -100px;
+  right: -100px;
+  animation-delay: 2s;
+}
+
+@keyframes float {
+  0% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(20px, 30px);
+  }
+  100% {
+    transform: translate(0, 0);
   }
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+/* 4. Картата (Glassmorphism) */
+.glass-card {
+  position: relative;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(16px); /* Ефект на матово стъкло */
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  padding: 2.5rem 2rem;
+  width: 85%;
+  max-width: 400px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  text-align: center;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+  min-height: 400px;
+  transition: transform 0.3s ease;
+}
+
+.glass-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.5);
+}
+
+/* 5. Елементи в картата */
+.header h2 {
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--text-secondary);
+  margin-top: 10px;
+  font-weight: 500;
+}
+
+.date-badge {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  color: var(--accent);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+.content {
+  flex-grow: 1;
+  display: flex;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  padding: 20px 0;
 }
 
-.App-link {
-  color: #61dafb;
+/* Стилен текст на късмета */
+.message-container {
+  position: relative;
 }
 
-@keyframes App-logo-spin {
+.fortune-text {
+  font-family: "Cormorant Garamond", serif; /* Елегантен серифен шрифт */
+  font-size: 1.8rem;
+  font-weight: 600;
+  line-height: 1.4;
+  color: #fff;
+  font-style: italic;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.quote-mark {
+  font-size: 4rem;
+  position: absolute;
+  color: rgba(255, 255, 255, 0.1);
+  font-family: serif;
+}
+
+.quote-mark:first-child {
+  top: -30px;
+  left: -10px;
+}
+
+.quote-mark.right {
+  bottom: -50px;
+  right: -10px;
+}
+
+/* 6. Footer */
+.footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.brand {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.4);
+  letter-spacing: 1px;
+  margin: 0;
+}
+
+.status-dot {
+  font-size: 0.7rem;
+  color: #00e676; /* Зелена точка */
+}
+
+/* 7. Анимации */
+.fade-in {
+  animation: fadeIn 1.5s ease-in-out forwards;
+  opacity: 0;
+}
+
+@keyframes fadeIn {
   from {
-    transform: rotate(0deg);
+    opacity: 0;
+    transform: translateY(10px);
   }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Спинър за зареждане */
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  border-top-color: var(--accent);
+  animation: spin 1s ease-in-out infinite;
+  margin: 0 auto 15px;
+}
+
+@keyframes spin {
   to {
     transform: rotate(360deg);
   }

@@ -6,7 +6,7 @@ import "./App.css";
 function App() {
   const [fortune, setFortune] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [isRevisit, setIsRevisit] = useState(false); // Дали е повторно влизане
+  const [isRevisit, setIsRevisit] = useState(false);
 
   useEffect(() => {
     let deviceId = localStorage.getItem("device_uuid");
@@ -17,7 +17,7 @@ function App() {
 
     const fetchFortune = async () => {
       try {
-        // Увери се, че порта е 5001
+        // Увери се, че тук е твоят Render линк!
         const response = await axios.post(
           "https://dailyqr.onrender.com/api/get-fortune",
           {
@@ -25,12 +25,11 @@ function App() {
           }
         );
 
-        // Взимаме данните от сървъра
         setFortune(response.data.message);
         setIsRevisit(response.data.isRevisit);
       } catch (err) {
         console.error(err);
-        setFortune("Нещо се обърка. Проверете връзката.");
+        setFortune("Вселената има технически проблем. Опитайте по-късно.");
       } finally {
         setLoading(false);
       }
@@ -41,27 +40,37 @@ function App() {
 
   return (
     <div className="app-container">
-      <div className="card">
-        {/* Сменяме заглавието ако е повторно влизане */}
-        <h1>{isRevisit ? "Не забравяй:" : "Вашият късмет за деня ✨"}</h1>
+      {/* Анимиран фон */}
+      <div className="background-orb orb-1"></div>
+      <div className="background-orb orb-2"></div>
 
-        {loading ? (
-          <p className="animate-pulse">Търсим вдъхновение...</p>
-        ) : (
-          <>
-            <div className={`message-box ${isRevisit ? "revisit" : "success"}`}>
-              <p>"{fortune}"</p>
+      <div className="glass-card">
+        <div className="header">
+          <span className="date-badge">
+            {new Date().toLocaleDateString("bg-BG")}
+          </span>
+          <h2>{isRevisit ? "Твоето послание" : "Послание за деня"}</h2>
+        </div>
+
+        <div className="content">
+          {loading ? (
+            <div className="loader-container">
+              <div className="spinner"></div>
+              <p>Разчитане на знаците...</p>
             </div>
+          ) : (
+            <div className="message-container fade-in">
+              <span className="quote-mark">“</span>
+              <p className="fortune-text">{fortune}</p>
+              <span className="quote-mark right">”</span>
+            </div>
+          )}
+        </div>
 
-            {isRevisit && (
-              <p className="hint">
-                Това е твоето послание за днес. Утре те очаква ново!
-              </p>
-            )}
-
-            {!isRevisit && <p className="brand-text">Усмихни се!</p>}
-          </>
-        )}
+        <div className="footer">
+          <p className="brand">Daily Inspiration</p>
+          {isRevisit && <span className="status-dot">● Запазено за днес</span>}
+        </div>
       </div>
     </div>
   );
