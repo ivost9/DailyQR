@@ -18,9 +18,12 @@ function App() {
     const fetchFortune = async () => {
       try {
         // Увери се, че порта е 5001
-        const response = await axios.post("https://dailyqr.onrender.com", {
-          deviceId: deviceId,
-        });
+        const response = await axios.post(
+          "https://dailyqr.onrender.com/api/get-fortune",
+          {
+            deviceId: deviceId,
+          }
+        );
 
         // Взимаме данните от сървъра
         setFortune(response.data.message);
