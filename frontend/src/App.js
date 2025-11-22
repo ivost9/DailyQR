@@ -68,7 +68,7 @@ function App() {
         </div>
 
         <div className="footer">
-          <p className="brand">Daily Inspiration</p>
+          <p className="brand">Дневно вдъхновение</p>
           {isRevisit && <span className="status-dot">● Запазено за днес</span>}
         </div>
       </div>
