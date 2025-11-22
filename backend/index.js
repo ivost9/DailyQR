@@ -8,8 +8,9 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-// Връзка с MongoDB Atlas (ще я зададем в настройките на Render)
 const MONGO_URI = process.env.MONGO_URI;
+// Тайна парола за админ достъп (сложи я в .env файла като ADMIN_SECRET=твоятапарола)
+const ADMIN_SECRET = process.env.ADMIN_SECRET;
 
 if (!MONGO_URI) {
   console.error("ГРЕШКА: Няма връзка с базата данни!");
@@ -20,12 +21,16 @@ if (!MONGO_URI) {
     .catch((err) => console.error(err));
 }
 
-// Схема на базата
-const VisitSchema = new mongoose.Schema({
-  deviceId: String,
-  date: String, // Пазим датата като стринг "Fri Nov 21 2025"
-  fortune: String, // Пазим какво му се е паднало
-});
+// 1. Промяна в схемата: Добавяме timestamp (createdAt) за да знаем точния час
+const VisitSchema = new mongoose.Schema(
+  {
+    deviceId: String,
+    date: String,
+    fortune: String,
+  },
+  { timestamps: true }
+); // Това автоматично добавя createdAt и updatedAt
+
 const Visit = mongoose.model("Visit", VisitSchema);
 
 const FORTUNES = [
@@ -133,7 +138,32 @@ const FORTUNES = [
 ];
 
 app.get("/", (req, res) => {
-  res.send("Server is running!"); // За проверка дали работи
+  res.send("Server is running!");
+});
+
+// --- НОВ ADMIN ENDPOINT ---
+app.get("/api/admin-stats", async (req, res) => {
+  const { secret } = req.query;
+
+  // Проверка дали подаденият ключ съвпада с твоя таен ключ
+  if (secret !== ADMIN_SECRET) {
+    return res.status(403).json({ error: "Достъп отказан!" });
+  }
+
+  try {
+    // Взимаме всички записи, сортирани от най-новия към най-стария
+    const visits = await Visit.find().sort({ _id: 1 });
+
+    const count = visits.length;
+
+    res.json({
+      count,
+      visits,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error fetching stats" });
+  }
 });
 
 app.post("/api/get-fortune", async (req, res) => {
@@ -143,10 +173,8 @@ app.post("/api/get-fortune", async (req, res) => {
   const todayStr = new Date().toDateString();
 
   try {
-    // 1. Търсим дали има запис за този телефон
     let userVisit = await Visit.findOne({ deviceId });
 
-    // 2. Ако има и е от днес -> връщаме стария късмет
     if (userVisit && userVisit.date === todayStr) {
       console.log("♻️ Повторно влизане");
       return res.json({
@@ -156,16 +184,18 @@ app.post("/api/get-fortune", async (req, res) => {
       });
     }
 
-    // 3. Ако е нов ден или нов потребител -> генерираме нов
-    const randomFortune = FORTUNES[Math.floor(Math.random() * FORTUNES.length)];
+    // Използваме цялата дължина на масива с късмети, ако не са заредени в примера,
+    // увери се, че const FORTUNES съдържа пълния ти списък.
+    const randomFortune =
+      FORTUNES.length > 0
+        ? FORTUNES[Math.floor(Math.random() * FORTUNES.length)]
+        : "Късметът ти се пише в момента...";
 
     if (userVisit) {
-      // Обновяваме стария запис с нова дата и късмет
       userVisit.date = todayStr;
       userVisit.fortune = randomFortune;
-      await userVisit.save();
+      await userVisit.save(); // Това ще обнови и updatedAt
     } else {
-      // Създаваме чисто нов запис
       await Visit.create({ deviceId, date: todayStr, fortune: randomFortune });
     }
 
@@ -181,6 +211,5 @@ app.post("/api/get-fortune", async (req, res) => {
   }
 });
 
-// Render автоматично дава порт в process.env.PORT
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));

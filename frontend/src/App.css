@@ -206,3 +206,117 @@ body {
     transform: rotate(360deg);
   }
 }
+
+.glass-card.admin-mode {
+  width: 95%;
+  max-width: 600px;
+  height: 85vh;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 10px;
+}
+
+.admin-header h3 {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--accent);
+  letter-spacing: 1px;
+}
+
+/* Заглавия на таблицата */
+.log-header-row {
+  display: flex;
+  padding: 10px 5px;
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  font-weight: bold;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Контейнер със скрол за записите */
+.logs-wrapper {
+  flex-grow: 1;
+  overflow-y: auto;
+  margin-bottom: 15px;
+  padding-right: 5px;
+}
+
+/* Скролбар стил */
+.logs-wrapper::-webkit-scrollbar {
+  width: 4px;
+}
+.logs-wrapper::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 4px;
+}
+
+/* Всеки ред от записа */
+.log-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Разпъва ги в двата края */
+  padding: 15px 10px; /* Повече въздух */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  transition: background 0.2s;
+}
+
+.log-row:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* --- КОЛОНИ --- */
+.col-num {
+  width: 30%;
+  color: var(--accent);
+  font-weight: bold;
+  font-family: monospace;
+  font-size: 1.1rem; /* По-голям шрифт за номера */
+}
+
+/* Датата заема останалото място и е подравнена вдясно */
+.col-date {
+  width: 70%;
+  font-size: 0.95rem; /* По-четлив шрифт */
+  color: #fff;
+  text-align: right; /* Вдясно, за да е подредено */
+  padding-right: 10px;
+}
+
+/* Премахваме старите стилове за излишните колони, за да не пречат */
+.col-id,
+.col-msg {
+  display: none;
+}
+
+/* Бутон за изход */
+.exit-btn {
+  background: rgba(255, 0, 0, 0.1);
+  border: 1px solid rgba(255, 0, 0, 0.3);
+  color: #ff6b6b;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.3s;
+}
+
+.exit-btn:hover {
+  background: rgba(255, 0, 0, 0.2);
+}
