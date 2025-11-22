@@ -41,7 +41,7 @@ function App() {
         .then((res) => {
           // ТУК Е МАГИЯТА: Сортираме ги хронологично (от старо към ново)
           const sortedVisits = res.data.visits.sort((a, b) => {
-            return getRealDate(a) - getRealDate(b);
+            return getRealDate(b) - getRealDate(a);
           });
 
           setStats({ count: res.data.count, visits: sortedVisits });
@@ -130,8 +130,7 @@ function App() {
                         className="log-row fade-in"
                         style={{ animationDelay: `${index * 0.05}s` }}
                       >
-                        {/* НОМЕР: Вече съответства на хронологията (1 е най-старото) */}
-                        <div className="col-num">#{index + 1}</div>
+                        <div className="col-num">#{stats.count - index}</div>
 
                         {/* ДАТА */}
                         <div
